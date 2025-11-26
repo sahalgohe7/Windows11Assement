@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Assessment Dashboard | Windows 11 Readiness</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #232d42;
+            --accent-cyan: #06d6a0;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #fb923c;
+            --accent-pink: #ec4899;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2d3748;
+            --glow-cyan: rgba(6, 214, 160, 0.15);
+            --glow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, var(--glow-cyan) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, var(--glow-purple) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+        }
+
+        /* Header */
+        .dashboard-header {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(26, 34, 52, 0.6);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px var(--glow-cyan);
+        }
+
+        .header-title h1 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .header-badge {
+            background: rgba(6, 214, 160, 0.15);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 40px rgba(6, 214, 160, 0.1);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.cyan {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .stat-icon.purple {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+        }
+
+        .stat-icon.orange {
+            background: rgba(251, 146, 60, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .stat-icon.pink {
+            background: rgba(236, 72, 153, 0.15);
+            color: var(--accent-pink);
+        }
+
+        .stat-icon.blue {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .stat-icon.red {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value.cyan { color: var(--accent-cyan); }
+        .stat-value.purple { color: var(--accent-purple); }
+        .stat-value.orange { color: var(--accent-orange); }
+        .stat-value.pink { color: var(--accent-pink); }
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.red { color: var(--accent-red); }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-trend.up {
+            color: var(--accent-cyan);
+        }
+
+        .stat-trend.down {
+            color: var(--accent-red);
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--border-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-title i {
+            color: var(--accent-cyan);
+        }
+
+        .chart-subtitle {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+
+        .chart-container.small {
+            height: 220px;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-title i {
+            color: var(--accent-purple);
+        }
+
+        .search-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 250px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box i {
+            color: var(--text-muted);
+        }
+
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .table-responsive::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table th {
+            background: var(--bg-secondary);
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .custom-table td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .custom-table tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        .badge-status {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .badge-warning {
+            background: rgba(251, 146, 60, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid var(--accent-orange);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+        }
+
+        /* Progress Bars */
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+
+        .progress-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .progress-bar-fill.cyan {
+            background: linear-gradient(90deg, var(--accent-cyan), #34d399);
+        }
+
+        .progress-bar-fill.purple {
+            background: linear-gradient(90deg, var(--accent-purple), #a78bfa);
+        }
+
+        .progress-bar-fill.orange {
+            background: linear-gradient(90deg, var(--accent-orange), #fbbf24);
+        }
+
+        .progress-bar-fill.pink {
+            background: linear-gradient(90deg, var(--accent-pink), #f472b6);
+        }
+
+        .progress-bar-fill.blue {
+            background: linear-gradient(90deg, var(--accent-blue), #60a5fa);
+        }
+
+        /* Insights Section */
+        .insight-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateX(5px);
+            border-color: var(--accent-cyan);
+        }
+
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .insight-icon.warning {
+            background: rgba(251, 146, 60, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .insight-icon.success {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .insight-icon.info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .insight-icon.danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .insight-content h6 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+        .delay-6 { animation-delay: 0.6s; opacity: 0; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1rem 0;
+            }
+
+            .header-title h1 {
+                font-size: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .search-box {
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .custom-table th,
+            .custom-table td {
+                padding: 0.75rem 1rem;
+                font-size: 0.75rem;
+            }
+
+            .header-badge {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .chart-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="logo-section">
+                        <div class="logo-icon">
+                            <i class="bi bi-pc-display-horizontal"></i>
+                        </div>
+                        <div class="header-title">
+                            <h1>IT Assessment Dashboard</h1>
+                            <p>Windows 11 Readiness Analysis</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto ms-auto d-none d-md-block">
+                    <span class="header-badge">
+                        <i class="bi bi-circle-fill me-1" style="font-size: 6px;"></i>
+                        Live Data
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            
+            <!-- Stats Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-1">
+                    <div class="stat-card">
+                        <div class="stat-icon cyan">
+                            <i class="bi bi-pc-display"></i>
+                        </div>
+                        <div class="stat-value cyan">52</div>
+                        <div class="stat-label">Total Computers</div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>All Assessed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-2">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="bi bi-windows"></i>
+                        </div>
+                        <div class="stat-value purple">46</div>
+                        <div class="stat-label">Win 11 Ready</div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-arrow-up"></i>
+                            <span>88.5% Compatible</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-3">
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="bi bi-x-circle"></i>
+                        </div>
+                        <div class="stat-value red">5</div>
+                        <div class="stat-label">Not Compatible</div>
+                        <div class="stat-trend down">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span>Needs Upgrade</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-4">
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="bi bi-shield-exclamation"></i>
+                        </div>
+                        <div class="stat-value orange">42</div>
+                        <div class="stat-label">TPM Disabled</div>
+                        <div class="stat-trend down">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Enable Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-5">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="bi bi-check2-all"></i>
+                        </div>
+                        <div class="stat-value blue">9</div>
+                        <div class="stat-label">Already Installed</div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-check"></i>
+                            <span>Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 animate-fadeInUp delay-6">
+                    <div class="stat-card">
+                        <div class="stat-icon pink">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="stat-value pink">2</div>
+                        <div class="stat-label">IT Officers</div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-person-check"></i>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 animate-fadeInUp delay-2">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-pie-chart-fill"></i>
+                                    Windows 11 Compatibility
+                                </div>
+                                <div class="chart-subtitle">Overall readiness status</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="compatibilityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 animate-fadeInUp delay-3">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-cpu-fill"></i>
+                                    Processor Distribution
+                                </div>
+                                <div class="chart-subtitle">CPU types across all systems</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="processorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 animate-fadeInUp delay-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-memory"></i>
+                                    RAM Distribution
+                                </div>
+                                <div class="chart-subtitle">Memory capacity overview</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="ramChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6 animate-fadeInUp delay-3">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-building"></i>
+                                    Computers by Office
+                                </div>
+                                <div class="chart-subtitle">Distribution across departments</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="officeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 animate-fadeInUp delay-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-shield-check"></i>
+                                    TPM Status
+                                </div>
+                                <div class="chart-subtitle">Security module state</div>
+                            </div>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="tpmChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 animate-fadeInUp delay-5">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-hdd-fill"></i>
+                                    Storage Type
+                                </div>
+                                <div class="chart-subtitle">SSD vs HDD ratio</div>
+                            </div>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="storageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights and Progress Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 animate-fadeInUp delay-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-lightbulb-fill"></i>
+                                    Key Insights
+                                </div>
+                                <div class="chart-subtitle">Important findings from analysis</div>
+                            </div>
+                        </div>
+                        
+                        <div class="insight-card">
+                            <div class="insight-icon warning">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h6>TPM Warning Alert</h6>
+                                <p>80.8% of systems have TPM disabled. Enable TPM in BIOS for Windows 11.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="insight-card">
+                            <div class="insight-icon success">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h6>High Compatibility Rate</h6>
+                                <p>88.5% of computers are Windows 11 ready after TPM enablement.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="insight-card">
+                            <div class="insight-icon info">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h6>RAM Upgrade Needed</h6>
+                                <p>65% have only 4GB RAM. Consider upgrading for better performance.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="insight-card">
+                            <div class="insight-icon danger">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h6>Legacy Processors</h6>
+                                <p>5 systems with Dual Core/Pentium need hardware replacement.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 animate-fadeInUp delay-5">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-bar-chart-fill"></i>
+                                    Upgrade Progress
+                                </div>
+                                <div class="chart-subtitle">Windows 11 deployment status</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="progress-label">Already Installed</span>
+                                    <span class="progress-value" style="color: var(--accent-cyan);">9 / 52</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill cyan" style="width: 17.3%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="progress-label">Ready (TPM Warning)</span>
+                                    <span class="progress-value" style="color: var(--accent-orange);">37 / 52</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill orange" style="width: 71.2%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="progress-label">Not Compatible</span>
+                                    <span class="progress-value" style="color: var(--accent-pink);">5 / 52</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill pink" style="width: 9.6%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="progress-label">Unknown Status</span>
+                                    <span class="progress-value" style="color: var(--accent-blue);">1 / 52</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill blue" style="width: 1.9%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">Total Progress</span>
+                                <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent-cyan);">17.3%</span>
+                            </div>
+                            <div class="progress-bar-container" style="margin-top: 0.5rem;">
+                                <div class="progress-bar-fill cyan" style="width: 17.3%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 animate-fadeInUp delay-6">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">
+                                    <i class="bi bi-person-badge-fill"></i>
+                                    IT Officer Workload
+                                </div>
+                                <div class="chart-subtitle">Assessment distribution</div>
+                            </div>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="officerChart"></canvas>
+                        </div>
+                        
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;">41</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">C/qani Axmed</div>
+                                </div>
+                                <div class="col-6">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-purple); font-family: 'JetBrains Mono', monospace;">11</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Sahal Abdi</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="row g-4">
+                <div class="col-12 animate-fadeInUp delay-5">
+                    <div class="data-table">
+                        <div class="table-header">
+                            <div class="table-title">
+                                <i class="bi bi-table"></i>
+                                Complete Assessment Data
+                            </div>
+                            <div class="search-box">
+                                <i class="bi bi-search"></i>
+                                <input type="text" id="searchInput" placeholder="Search computers..." onkeyup="filterTable()">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>PC Name</th>
+                                        <th>Office</th>
+                                        <th>Processor</th>
+                                        <th>RAM</th>
+                                        <th>Storage</th>
+                                        <th>TPM</th>
+                                        <th>Win 11 Ready</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="container-fluid px-4">
+            <p>IT Assessment Dashboard &copy; 2025 | Accountant General Office | Built with Bootstrap & Chart.js</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Chart.js Global Configuration
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#2d3748';
+        Chart.defaults.font.family = "'Outfit', sans-serif";
+
+        // Color Palette
+        const colors = {
+            cyan: '#06d6a0',
+            purple: '#8b5cf6',
+            orange: '#fb923c',
+            pink: '#ec4899',
+            blue: '#3b82f6',
+            red: '#ef4444',
+            gray: '#64748b'
+        };
+
+        // Data
+        const assessmentData = [
+            { pcName: "Fardus Abdilahi", office: "Expenditures Checking", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Rahma Khadar", office: "Expenditures Checking", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Eid Ali Adam", office: "Expenditures Checking", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Ahmed Wacays", office: "Cash Payment", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Ahmed Farah", office: "Expenditures Checking", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Farxan Muse", office: "Expenditures Checking", processor: "Core i5", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Jamac Mohamed Jamac", office: "Expenditures Checking", processor: "Dual Core", ram: "4 GB", storage: "500GB HDD", tpm: "Disable", win11: "NO", notes: "Processor not compatible" },
+            { pcName: "Yasin Sulub Hassan", office: "Expenditures Checking", processor: "Core i5", ram: "12GB", storage: "2TB HDD", tpm: "Enable", win11: "NO", notes: "Processor not supported" },
+            { pcName: "Amaal Mohamed", office: "Expenditures Checking", processor: "Dual Core", ram: "32 GB", storage: "100GB HDD", tpm: "N/A", win11: "N/A", notes: "Cannot install software" },
+            { pcName: "Khadar Muxumed Hassan", office: "HRM", processor: "Dual Core", ram: "4 GB", storage: "500GB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Deqa Ali Du'ale", office: "Expenditures Checking", processor: "Dual Core", ram: "32 GB", storage: "500GB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Chief Warsame", office: "Expenditures Checking", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Amran Muxumed Hassan", office: "Expenditures Checking", processor: "Core i5", ram: "8 GB", storage: "1TB HDD", tpm: "Enable", win11: "YES", notes: "" },
+            { pcName: "Ahmed Ali Abdi", office: "N/A", processor: "Core i5", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Ladna Hussein", office: "Expenditures Checking", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Mumtas Yazin", office: "HRM", processor: "Core i3", ram: "8 GB", storage: "512GB SSD", tpm: "Enable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Mohamed Haybe", office: "Checking Office", processor: "Dual Core", ram: "32 GB", storage: "500GB HDD", tpm: "Disable", win11: "NO", notes: "Processor not supported" },
+            { pcName: "Bilan", office: "HRM", processor: "Core i5", ram: "8 GB", storage: "512GB SSD", tpm: "Enable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Idiris", office: "Cash Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Sharmarke", office: "Cash Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Ifraax Ibraahim", office: "Assistence Office", processor: "Core i5", ram: "8 GB", storage: "1TB HDD", tpm: "Enable", win11: "NO", notes: "Already Installed" },
+            { pcName: "Liibaan", office: "Assistence Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "C/qani Selef", office: "Planning Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Enable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Filsan Abdilahi", office: "Checking Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Nimco Qawdhan", office: "Checking Office", processor: "Core i3", ram: "8 GB", storage: "512GB SSD", tpm: "Enable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Hamda", office: "Local Goverments", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Yasin Mohamed Ahmed", office: "Public Enterprise", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Hamse Haji", office: "World Bank Programe", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Abdifatah Koshin", office: "Asset Registration", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Fardus Faysal Dagal", office: "Revenue Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Enable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Ahmed Abdi", office: "Revenue Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Abdikarem Mohamed", office: "Abstract Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Khadar", office: "Local Goverments", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Mustafe Mohamed Omer", office: "Abstract Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Sabaax", office: "Local Goverments", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Kayse's Laptop", office: "Consultant Office", processor: "Core i5", ram: "8 GB", storage: "1TB HDD", tpm: "Enable", win11: "NO", notes: "Processor not supported" },
+            { pcName: "Kayse's All in One PC", office: "Consultant Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Liibaan Ahmed", office: "Revenue Checking Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Mustafe Abdiqadir", office: "Revenue Checking Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Mohamed Sheekh", office: "Asset Registration", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Mire", office: "KPI Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Ahmed Ibrahim", office: "World Bank Program", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Abdirahman Ibrahim", office: "World Bank Program", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Abdirizak Hussein", office: "Public Enterprise", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Abdirahman Kayse", office: "Local Goverments", processor: "Core i3", ram: "4 GB", storage: "512GB SSD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Nuradin Mohamed", office: "X. Xisaab Xidhka", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "Already Installed" },
+            { pcName: "Haji Ukun", office: "X. Xisaab Xidhka", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Fadumo Yazin", office: "Checking & Control", processor: "Core i7", ram: "16 GB", storage: "1TB", tpm: "N/A", win11: "YES", notes: "Already Installed" },
+            { pcName: "Huda Abdilahi", office: "Reporting Office", processor: "Core i7", ram: "16 GB", storage: "1TB SSD", tpm: "N/A", win11: "YES", notes: "Already Installed" },
+            { pcName: "Abdifatah Abdirahman Moge", office: "Coordination Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Saleban Osman Dahir", office: "Abstract Office (MDA)", processor: "Core i5", ram: "8 GB", storage: "256GB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "Yazin Duale", office: "Deputy AG Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" }
+        ];
+
+        // Populate Table
+        function populateTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                let win11Badge = '';
+                if (item.win11 === 'YES') {
+                    win11Badge = '<span class="badge-status badge-success">Yes</span>';
+                } else if (item.win11 === 'NO') {
+                    win11Badge = '<span class="badge-status badge-danger">No</span>';
+                } else {
+                    win11Badge = '<span class="badge-status badge-warning">N/A</span>';
+                }
+                
+                let tpmBadge = '';
+                if (item.tpm === 'Enable') {
+                    tpmBadge = '<span class="badge-status badge-success">Enabled</span>';
+                } else if (item.tpm === 'Disable') {
+                    tpmBadge = '<span class="badge-status badge-warning">Disabled</span>';
+                } else {
+                    tpmBadge = '<span class="badge-status badge-info">N/A</span>';
+                }
+                
+                let statusBadge = '';
+                if (item.notes.includes('Already Installed')) {
+                    statusBadge = '<span class="badge-status badge-success">Installed</span>';
+                } else if (item.notes.includes('TPM Warning')) {
+                    statusBadge = '<span class="badge-status badge-warning">TPM Warning</span>';
+                } else if (item.notes.includes('not compatible') || item.notes.includes('not supported')) {
+                    statusBadge = '<span class="badge-status badge-danger">Incompatible</span>';
+                } else {
+                    statusBadge = '<span class="badge-status badge-info">Pending</span>';
+                }
+                
+                row.innerHTML = `
+                    <td><strong>${item.pcName}</strong></td>
+                    <td>${item.office}</td>
+                    <td>${item.processor}</td>
+                    <td>${item.ram}</td>
+                    <td>${item.storage}</td>
+                    <td>${tpmBadge}</td>
+                    <td>${win11Badge}</td>
+                    <td>${statusBadge}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Filter Table
+        function filterTable() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const filteredData = assessmentData.filter(item => 
+                item.pcName.toLowerCase().includes(searchValue) ||
+                item.office.toLowerCase().includes(searchValue) ||
+                item.processor.toLowerCase().includes(searchValue)
+            );
+            populateTable(filteredData);
+        }
+
+        // Initialize Table
+        populateTable(assessmentData);
+
+        // 1. Windows 11 Compatibility Chart (Doughnut)
+        const compatibilityCtx = document.getElementById('compatibilityChart').getContext('2d');
+        new Chart(compatibilityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Compatible', 'Not Compatible', 'Unknown'],
+                datasets: [{
+                    data: [46, 5, 1],
+                    backgroundColor: [colors.cyan, colors.red, colors.gray],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Processor Distribution Chart (Bar)
+        const processorCtx = document.getElementById('processorChart').getContext('2d');
+        new Chart(processorCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Core i3', 'Core i5', 'Core i7', 'Dual Core'],
+                datasets: [{
+                    label: 'Count',
+                    data: [31, 15, 2, 5],
+                    backgroundColor: [colors.cyan, colors.purple, colors.blue, colors.orange],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(45, 55, 72, 0.5)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 3. RAM Distribution Chart (Horizontal Bar)
+        const ramCtx = document.getElementById('ramChart').getContext('2d');
+        new Chart(ramCtx, {
+            type: 'bar',
+            data: {
+                labels: ['4 GB', '8 GB', '12 GB', '16 GB', '32 GB'],
+                datasets: [{
+                    label: 'Systems',
+                    data: [34, 13, 1, 2, 3],
+                    backgroundColor: [
+                        colors.red,
+                        colors.orange,
+                        colors.purple,
+                        colors.cyan,
+                        colors.blue
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(45, 55, 72, 0.5)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. Office Distribution Chart (Bar)
+        const officeCtx = document.getElementById('officeChart').getContext('2d');
+        new Chart(officeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Expenditures', 'Local Gov', 'HRM', 'Cash Office', 'World Bank', 'Checking', 'Revenue', 'Others'],
+                datasets: [{
+                    label: 'Computers',
+                    data: [14, 4, 3, 2, 3, 4, 4, 18],
+                    backgroundColor: colors.purple,
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(45, 55, 72, 0.5)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+
+        // 5. TPM Status Chart (Doughnut)
+        const tpmCtx = document.getElementById('tpmChart').getContext('2d');
+        new Chart(tpmCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Enabled', 'Disabled', 'N/A'],
+                datasets: [{
+                    data: [10, 42, 3],
+                    backgroundColor: [colors.cyan, colors.orange, colors.gray],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 6. Storage Type Chart (Pie)
+        const storageCtx = document.getElementById('storageChart').getContext('2d');
+        new Chart(storageCtx, {
+            type: 'pie',
+            data: {
+                labels: ['HDD', 'SSD'],
+                datasets: [{
+                    data: [46, 6],
+                    backgroundColor: [colors.orange, colors.cyan],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 7. IT Officer Workload Chart (Doughnut)
+        const officerCtx = document.getElementById('officerChart').getContext('2d');
+        new Chart(officerCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['C/qani Axmed', 'Sahal Abdi'],
+                datasets: [{
+                    data: [41, 11],
+                    backgroundColor: [colors.cyan, colors.purple],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '55%',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
