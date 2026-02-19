@@ -695,7 +695,7 @@
                         <div class="stat-icon cyan">
                             <i class="bi bi-pc-display"></i>
                         </div>
-                        <div class="stat-value cyan">52</div>
+                        <div class="stat-value cyan">66</div>
                         <div class="stat-label">Total Computers</div>
                         <div class="stat-trend up">
                             <i class="bi bi-check-circle-fill"></i>
@@ -721,7 +721,7 @@
                         <div class="stat-icon red">
                             <i class="bi bi-x-circle"></i>
                         </div>
-                        <div class="stat-value red">5</div>
+                        <div class="stat-value red">7</div>
                         <div class="stat-label">Not Compatible</div>
                         <div class="stat-trend down">
                             <i class="bi bi-exclamation-triangle"></i>
@@ -760,8 +760,8 @@
                         <div class="stat-icon pink">
                             <i class="bi bi-people"></i>
                         </div>
-                        <div class="stat-value pink">2</div>
-                        <div class="stat-label">IT Officers</div>
+                        <div class="stat-value pink">6</div>
+                        <div class="stat-label"> Not Functioning</div>
                         <div class="stat-trend up">
                             <i class="bi bi-person-check"></i>
                             <span>Active</span>
@@ -999,30 +999,9 @@
                 <div class="col-lg-4 animate-fadeInUp delay-6">
                     <div class="chart-card">
                         <div class="chart-header">
-                            <div>
-                                <div class="chart-title">
-                                    <i class="bi bi-person-badge-fill"></i>
-                                    IT Officer Workload
-                                </div>
-                                <div class="chart-subtitle">Assessment distribution</div>
-                            </div>
+                          
                         </div>
-                        <div class="chart-container small">
-                            <canvas id="officerChart"></canvas>
-                        </div>
-                        
-                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                            <div class="row text-center">
-                                <div class="col-6">
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;">41</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted);">C/qani Axmed</div>
-                                </div>
-                                <div class="col-6">
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-purple); font-family: 'JetBrains Mono', monospace;">11</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Sahal Abdi</div>
-                                </div>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -1149,7 +1128,22 @@
             { pcName: "Huda Abdilahi", office: "Reporting Office", processor: "Core i7", ram: "16 GB", storage: "1TB SSD", tpm: "N/A", win11: "YES", notes: "Already Installed" },
             { pcName: "Abdifatah Abdirahman Moge", office: "Coordination Office", processor: "Core i3", ram: "4 GB", storage: "1TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
             { pcName: "Saleban Osman Dahir", office: "Abstract Office (MDA)", processor: "Core i5", ram: "8 GB", storage: "256GB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
-            { pcName: "Yazin Duale", office: "Deputy AG Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" }
+            { pcName: "Yazin Duale", office: "Deputy AG Office", processor: "Core i5", ram: "8 GB", storage: "2TB HDD", tpm: "Disable", win11: "YES", notes: "TPM Warning" },
+            { pcName: "mohamed case", office: "controll office", processor: "Core i5", ram: "8 GB", storage: "1TB HDD", tpm: "Disable", win11: "Yes", notes: "TPM Warning" },
+            { pcName: "Abdi adan", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "NO keyboard/mouse only case computer and monitor"},
+            { pcName: "Mohamed abdirahman", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "function slow"},
+            { pcName: "Mohamed ahmed", office: "controll office", processor: "pentium", ram: "4GB", storage: "500GB HDD", tpm: "disable", win11: "NO", notes: " slow "},
+            { pcName: "Jimcale Jama", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "No Function at ALL"},
+            { pcName: "Cawo ", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "NOt Use"},
+            { pcName: "Fahad", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "not function at all"},
+            { pcName: "DEEQA", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "not function"},
+            { pcName: "HODO mustafe", office: "controll office", processor: "", ram: "", storage: "", tpm: "", win11: "NO", notes: "Not function at all"},
+            { pcName: "Daud", office: "controll office", processor: "Xeon", ram: "32GB", storage: "500GB HDD", tpm: "disable", win11: "NO", notes: "warning"},
+
+
+
+
+
         ];
 
         // Populate Table
@@ -1253,11 +1247,11 @@
         new Chart(processorCtx, {
             type: 'bar',
             data: {
-                labels: ['Core i3', 'Core i5', 'Core i7', 'Dual Core'],
+                labels: ['Core i3', 'Core i5', 'Core i7', 'Dual Core','Xeon','pentium'],
                 datasets: [{
                     label: 'Count',
-                    data: [31, 15, 2, 5],
-                    backgroundColor: [colors.cyan, colors.purple, colors.blue, colors.orange],
+                    data: [31, 15, 2, 5,1,1],
+                    backgroundColor: [colors.cyan, colors.purple, colors.blue, colors.orange,colors.red,colors.gray],
                     borderRadius: 8,
                     borderSkipped: false
                 }]
@@ -1294,7 +1288,7 @@
                 labels: ['4 GB', '8 GB', '12 GB', '16 GB', '32 GB'],
                 datasets: [{
                     label: 'Systems',
-                    data: [34, 13, 1, 2, 3],
+                    data: [35, 13, 1, 2, 4],
                     backgroundColor: [
                         colors.red,
                         colors.orange,
@@ -1413,7 +1407,7 @@
             data: {
                 labels: ['HDD', 'SSD'],
                 datasets: [{
-                    data: [46, 6],
+                    data: [49, 6],
                     backgroundColor: [colors.orange, colors.cyan],
                     borderWidth: 0,
                     hoverOffset: 8
@@ -1439,29 +1433,7 @@
         });
 
         // 7. IT Officer Workload Chart (Doughnut)
-        const officerCtx = document.getElementById('officerChart').getContext('2d');
-        new Chart(officerCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['C/qani Axmed', 'Sahal Abdi'],
-                datasets: [{
-                    data: [41, 11],
-                    backgroundColor: [colors.cyan, colors.purple],
-                    borderWidth: 0,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '55%',
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
+       
     </script>
 </body>
 </html>
